@@ -20,7 +20,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 // ✅ Server URL for deployment
                 .servers(List.of(
-                        new Server().url("https://9335.pro604cr.amypo.ai:9001")
+                        new Server().url("https://9335.pro604cr.amypo.ai")
                 ))
 
                 // ✅ API Information (required by test case)
