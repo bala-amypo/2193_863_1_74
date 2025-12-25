@@ -7,6 +7,7 @@ import com.example.demo.repository.ClaimRepository;
 import com.example.demo.repository.PolicyRepository;
 import com.example.demo.service.ClaimService;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,11 +28,11 @@ public class ClaimServiceImpl implements ClaimService {
                 .orElseThrow(() -> new ResourceNotFoundException("Policy not found"));
         
         if (claim.getClaimAmount() < 0) {
-            throw new IllegalArgumentException("Invalid claim amount - must be non-negative");
+            throw new IllegalArgumentException("Invalid claim amount");
         }
         
         if (claim.getClaimDate().isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("Invalid claim date - cannot be in the future");
+            throw new IllegalArgumentException("Invalid claim date");
         }
         
         claim.setPolicy(policy);

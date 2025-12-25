@@ -9,6 +9,7 @@ import com.example.demo.repository.FraudCheckResultRepository;
 import com.example.demo.repository.FraudRuleRepository;
 import com.example.demo.service.FraudDetectionService;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class FraudDetectionServiceImpl implements FraudDetectionService {
                 FraudCheckResult result = new FraudCheckResult(
                     claim, 
                     true, 
-                    rule.getRuleName(),
+                    rule.getRuleName(), 
                     "Claim flagged by rule: " + rule.getRuleName(),
                     LocalDateTime.now()
                 );
@@ -50,7 +51,7 @@ public class FraudDetectionServiceImpl implements FraudDetectionService {
         FraudCheckResult result = new FraudCheckResult(
             claim, 
             false, 
-            null,
+            null, 
             "No fraud detected",
             LocalDateTime.now()
         );
