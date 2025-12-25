@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,7 +23,7 @@ public class FraudRule {
     private String severity;
     
     @ManyToMany(mappedBy = "suspectedRules")
-    private Set<Claim> claims;
+    private Set<Claim> claims = new HashSet<>();
     
     public FraudRule() {}
     
@@ -34,7 +35,7 @@ public class FraudRule {
         this.severity = severity;
     }
     
-    // Getters and setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

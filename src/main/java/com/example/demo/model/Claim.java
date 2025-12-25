@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,7 +12,7 @@ public class Claim {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "policy_id")
     private Policy policy;
     
@@ -21,17 +22,17 @@ public class Claim {
     
     private String description;
     
-    private String status;
+    private String status = "PENDING";
     
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "claim_fraud_rules",
         joinColumns = @JoinColumn(name = "claim_id"),
         inverseJoinColumns = @JoinColumn(name = "fraud_rule_id")
     )
-    private Set<FraudRule> suspectedRules;
+    private Set<FraudRule> suspectedRules = new HashSet<>();
     
-    @OneToOne(mappedBy = "claim", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "claim", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FraudCheckResult fraudCheckResult;
     
     public Claim() {}
@@ -43,7 +44,7 @@ public class Claim {
         this.description = description;
     }
     
-    // Getters and setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

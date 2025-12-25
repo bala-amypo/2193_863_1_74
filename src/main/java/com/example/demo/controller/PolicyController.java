@@ -11,34 +11,28 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/policies")
 public class PolicyController {
-
+    
     private final PolicyService policyService;
-
+    
     public PolicyController(PolicyService policyService) {
         this.policyService = policyService;
     }
-
-    // Create a new policy for an existing user
+    
     @PostMapping("/{userId}")
-    public ResponseEntity<Policy> createPolicy(
-            @PathVariable Long userId,
-            @RequestBody PolicyDto dto
-    ) {
-        Policy createdPolicy = policyService.createPolicy(userId, dto);
-        return ResponseEntity.ok(createdPolicy);
+    public ResponseEntity<Policy> createPolicy(@PathVariable Long userId, @RequestBody PolicyDto policyDto) {
+        Policy policy = new Policy();
+        policy.setPolicyNumber(policyDto.getPolicyNumber());
+        policy.setPolicyType(policyDto.getPolicyType());
+        policy.setStartDate(policyDto.getStartDate());
+        policy.setEndDate(policyDto.getEndDate());
+        
+        Policy savedPolicy = policyService.createPolicy(userId, policy);
+        return ResponseEntity.ok(savedPolicy);
     }
-
-    // Get all policies of a specific user
+    
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Policy>> getPoliciesByUser(@PathVariable Long userId) {
         List<Policy> policies = policyService.getPoliciesByUser(userId);
         return ResponseEntity.ok(policies);
-    }
-
-    // Get a policy by its ID
-    @GetMapping("/{policyId}")
-    public ResponseEntity<Policy> getPolicy(@PathVariable Long policyId) {
-        Policy policy = policyService.getPolicy(policyId);
-        return ResponseEntity.ok(policy);
     }
 }

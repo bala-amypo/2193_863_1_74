@@ -10,7 +10,7 @@ public class FraudCheckResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "claim_id")
     private Claim claim;
     
@@ -21,6 +21,8 @@ public class FraudCheckResult {
     private String rejectionReason;
     
     private LocalDateTime checkedAt;
+    
+    private String matchedRules;
     
     public FraudCheckResult() {}
     
@@ -39,7 +41,7 @@ public class FraudCheckResult {
         }
     }
     
-    // Getters and setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
@@ -57,4 +59,7 @@ public class FraudCheckResult {
     
     public LocalDateTime getCheckedAt() { return checkedAt; }
     public void setCheckedAt(LocalDateTime checkedAt) { this.checkedAt = checkedAt; }
+    
+    public String getMatchedRules() { return matchedRules; }
+    public void setMatchedRules(String matchedRules) { this.matchedRules = matchedRules; }
 }

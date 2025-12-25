@@ -7,6 +7,12 @@ public class AuthRequest {
     
     public AuthRequest() {}
     
+    public AuthRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+    
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     
