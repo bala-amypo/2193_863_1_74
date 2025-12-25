@@ -2,7 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "policies")
@@ -11,7 +12,7 @@ public class Policy {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     
@@ -24,8 +25,8 @@ public class Policy {
     
     private LocalDate endDate;
     
-    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL)
-    private List<Claim> claims;
+    @OneToMany(mappedBy = "policy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Claim> claims = new HashSet<>();
     
     public Policy() {}
     
@@ -37,7 +38,7 @@ public class Policy {
         this.endDate = endDate;
     }
     
-    // Getters and setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     
@@ -56,6 +57,6 @@ public class Policy {
     public LocalDate getEndDate() { return endDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
     
-    public List<Claim> getClaims() { return claims; }
-    public void setClaims(List<Claim> claims) { this.claims = claims; }
+    public Set<Claim> getClaims() { return claims; }
+    public void setClaims(Set<Claim> claims) { this.claims = claims; }
 }
