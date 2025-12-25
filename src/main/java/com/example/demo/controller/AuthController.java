@@ -25,8 +25,8 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody AuthRequest request) {
-        User user = new User(request.getName(), request.getEmail(), request.getPassword(), null);
-        User savedUser = userService.registerUser(user);
+        User user = new User(request.getName(), request.getEmail(), request.getPassword(), "USER");
+        User savedUser = userService.register(user);
         return ResponseEntity.ok(savedUser);
     }
     
@@ -34,13 +34,12 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         User user = userService.findByEmail(request.getEmail());
         
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid credentials");
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            String token = jwtUtil.generateToken(user);
+            AuthResponse response = new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
+            return ResponseEntity.ok(response);
         }
         
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
-        AuthResponse response = new AuthResponse(token, user.getId(), user.getEmail(), user.getRole());
-        
-        return ResponseEntity.ok(response);
+        return ResponseEntity.badRequest().build();
     }
 }

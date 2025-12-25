@@ -5,6 +5,7 @@ import com.example.demo.model.Claim;
 import com.example.demo.service.ClaimService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -19,7 +20,11 @@ public class ClaimController {
     
     @PostMapping("/{policyId}")
     public ResponseEntity<Claim> createClaim(@PathVariable Long policyId, @RequestBody ClaimDto claimDto) {
-        Claim claim = new Claim(null, claimDto.getClaimDate(), claimDto.getClaimAmount(), claimDto.getDescription());
+        Claim claim = new Claim();
+        claim.setClaimDate(claimDto.getClaimDate());
+        claim.setClaimAmount(claimDto.getClaimAmount());
+        claim.setDescription(claimDto.getDescription());
+        
         Claim savedClaim = claimService.createClaim(policyId, claim);
         return ResponseEntity.ok(savedClaim);
     }
