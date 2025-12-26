@@ -15,6 +15,8 @@
     <description>Insurance Fraud Pattern Detection System</description>
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     
     <dependencies>
@@ -38,8 +40,8 @@
 
         <!-- Database -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
         </dependency>
         <dependency>
@@ -74,7 +76,16 @@
             <version>2.2.0</version>
         </dependency>
 
-        <!-- Testing - Spring Boot Test with JUnit EXCLUDED -->
+        <!-- TEST DEPENDENCIES - TestNG ONLY -->
+        <!-- TestNG - Primary testing framework -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.8.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring Boot Test - EXCLUDE JUnit completely -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -96,21 +107,18 @@
                     <groupId>org.junit.platform</groupId>
                     <artifactId>junit-platform-engine</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         
-        <!-- TestNG - Main testing framework -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>7.8.0</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- Mockito for mocking -->
+        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
         
@@ -121,11 +129,10 @@
             <scope>test</scope>
         </dependency>
         
-        <!-- TestNG Spring integration -->
+        <!-- AssertJ for fluent assertions -->
         <dependency>
-            <groupId>com.github.testng-team</groupId>
-            <artifactId>testng-spring</artifactId>
-            <version>1.0.3</version>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -136,46 +143,44 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             
-            <!-- Maven Surefire Plugin configured for TestNG -->
+            <!-- Maven Surefire Plugin - FORCE TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M9</version>
+                <version>3.2.5</version>
                 <configuration>
-                    <!-- Force TestNG usage -->
+                    <!-- Force TestNG provider -->
                     <useSystemClassLoader>false</useSystemClassLoader>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                    <!-- Alternative: If no testng.xml, use test classes directly -->
-                    <properties>
-                        <property>
-                            <name>suitename</name>
-                            <value>Insurance Fraud Pattern Detector Test Suite</value>
-                        </property>
-                        <property>
-                            <name>testname</name>
-                            <value>All Tests</value>
-                        </property>
-                    </properties>
-                    <!-- Include all test classes -->
+                    <!-- Include all test files -->
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                         <include>**/*TestNG.java</include>
+                        <include>**/Test*.java</include>
                     </includes>
-                    <!-- Force parallel mode if needed -->
-                    <parallel>methods</parallel>
-                    <threadCount>10</threadCount>
+                    <!-- Don't skip any tests -->
+                    <skipTests>false</skipTests>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <!-- Enable parallel execution for speed -->
+                    <parallel>classes</parallel>
+                    <threadCount>4</threadCount>
                 </configuration>
                 <dependencies>
-                    <!-- Add TestNG provider for Surefire -->
+                    <!-- Add TestNG provider explicitly -->
                     <dependency>
                         <groupId>org.apache.maven.surefire</groupId>
                         <artifactId>surefire-testng</artifactId>
-                        <version>3.0.0-M9</version>
+                        <version>3.2.5</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -188,8 +193,18 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>test</id>
+            <properties>
+                <spring.profiles.active>test</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>
