@@ -8,7 +8,7 @@ import com.example.demo.repository.ClaimRepository;
 import com.example.demo.repository.FraudCheckResultRepository;
 import com.example.demo.repository.FraudRuleRepository;
 import com.example.demo.service.FraudDetectionService;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service; 
 
 import java.time.LocalDateTime;
 import java.util.List;
