@@ -22,9 +22,14 @@ public class SwaggerConfig {
                         .version("1.0")
                         .description("API for Insurance Fraud Pattern Detection System")
                 )
-                // Server configuration (keep only if deployed URL is needed)
+                // Multiple servers - both local and deployed
                 .servers(List.of(
-                        new Server().url("https://9084.32procr.amypo.ai/")
+                        new Server()
+                                .url("http://localhost:3306")
+                                .description("Local Development Server"),
+                        new Server()
+                                .url("https://9084.32procr.amypo.ai/")
+                                .description("Production Server")
                 ))
                 // JWT Security
                 .addSecurityItem(
@@ -37,6 +42,8 @@ public class SwaggerConfig {
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
+                                        .name("Authorization")
+                                        .description("Enter JWT token (without 'Bearer ' prefix)")
                         )
                 );
     }
