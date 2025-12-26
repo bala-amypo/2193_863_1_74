@@ -16,6 +16,7 @@
     <properties>
         <java.version>17</java.version>
     </properties>
+    
     <dependencies>
         <!-- Spring Boot Starters -->
         <dependency>
@@ -73,44 +74,122 @@
             <version>2.2.0</version>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Testing - Spring Boot Test with JUnit EXCLUDED -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-launcher</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>junit-platform-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
+        <!-- TestNG - Main testing framework -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.8.0</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Mockito for mocking -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Spring Security Test -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- TestNG Spring integration -->
+        <dependency>
+            <groupId>com.github.testng-team</groupId>
+            <artifactId>testng-spring</artifactId>
+            <version>1.0.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
-   <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>3.0.0-M9</version>
-            <configuration>
-                <suiteXmlFiles>
-                    <suiteXmlFile>testng.xml</suiteXmlFile>
-                </suiteXmlFiles>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
-
+    <build>
+        <plugins>
+            <!-- Spring Boot Maven Plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            
+            <!-- Maven Surefire Plugin configured for TestNG -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M9</version>
+                <configuration>
+                    <!-- Force TestNG usage -->
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <!-- Alternative: If no testng.xml, use test classes directly -->
+                    <properties>
+                        <property>
+                            <name>suitename</name>
+                            <value>Insurance Fraud Pattern Detector Test Suite</value>
+                        </property>
+                        <property>
+                            <name>testname</name>
+                            <value>All Tests</value>
+                        </property>
+                    </properties>
+                    <!-- Include all test classes -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                        <include>**/*TestNG.java</include>
+                    </includes>
+                    <!-- Force parallel mode if needed -->
+                    <parallel>methods</parallel>
+                    <threadCount>10</threadCount>
+                </configuration>
+                <dependencies>
+                    <!-- Add TestNG provider for Surefire -->
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-testng</artifactId>
+                        <version>3.0.0-M9</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            
+            <!-- Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
